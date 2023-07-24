@@ -86,7 +86,7 @@ const Header = () => {
                                     setMenu(!menu);
                                 }}
                                 src={profileurl}
-                                style={{ width: '80px', height: '70px', borderRadius: '50px' }}
+                                style={{ width: '60px', height: '60px', borderRadius: '50px' }}
                             ></img>
                         </div>
                         {menu ? <Modal ref={modalRef} setIsLogIn={setIsLogIn} setMenu={setMenu}></Modal> : null}
@@ -161,7 +161,8 @@ const StyledHeader = styled.div`
 `;
 const StyledModal = styled.div`
     position: absolute;
-    top: 85px;
+    top: 52px;
+    left: -72px;
     width: 105px;
     border-radius: 10px;
     height: 70px;
