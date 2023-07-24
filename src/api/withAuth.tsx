@@ -11,7 +11,7 @@ export default function withAuth(WrappedComponent) {
 
         if (!cookies.AuthorizationToken || !memberId) {
             dispatch(setToast('로그인이 필요합니다'));
-            return <Navigate to="/login" />;
+            return <Navigate to="/login" replace />;
         }
 
         return <WrappedComponent {...props} />;

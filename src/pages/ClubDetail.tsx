@@ -187,6 +187,13 @@ const ClubDetail = () => {
                             <h3>연락 방법: </h3>
                             <span onClick={handleNavigateContact}>링크</span>
                         </div>
+                        <div>
+                            {boardClubStatus === 'BOARD_CLUB_RECRUITING' ? (
+                                <StyledStatusButton>모집 마감</StyledStatusButton>
+                            ) : (
+                                <span>모집 마감됨</span>
+                            )}
+                        </div>
 
                         <UserInfo onClick={handleNavigateProfile}>
                             <StyledCreateAt className="date">{moment(createdAt).format('YYYY-MM-DD')}</StyledCreateAt>
@@ -326,7 +333,7 @@ const ContentInfo = styled.div`
     align-items: start;
     justify-content: start;
     font-size: 13px;
-    gap: 20px;
+    gap: 10px;
     > div {
         > h3 {
             margin-right: 5px;
@@ -385,7 +392,7 @@ const EditContainer = styled.div`
 
 const UserInfo = styled.div`
     font-weight: bold;
-    margin-left: 140px;
+    margin-left: 100px;
     > img {
         margin-right: 5px;
     }
@@ -395,4 +402,15 @@ const StyledCreateAt = styled.div`
     color: #696969;
     opacity: 0.7;
     font-size: 14px;
+`;
+
+const StyledStatusButton = styled.button`
+    font-size: 12px;
+    background-color: #3884d5;
+    color: #ffffff;
+    padding: 3px 5px 3px 5px;
+    border-radius: 20px;
+    list-style: none;
+    white-space: nowrap;
+    margin: 0px 0px 0px 5px;
 `;
