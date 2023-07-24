@@ -10,6 +10,7 @@ import DetailCommentSection from '../components/DetailCommentSection.tsx';
 import { useMutation } from '@tanstack/react-query';
 import { usePostHeader } from '../api/getHeader.ts';
 import ClubMapContainer from '../components/clubMap.tsx';
+import moment from 'moment';
 import LikeIcon from '../assets/Like.svg';
 
 interface BackgroundProps {
@@ -28,11 +29,11 @@ const ClubDetail = () => {
     const [stateLikeCount, setStateLikeCount] = useState(0);
 
     let //
-        // boardClubStatus,
+        boardClubStatus,
         contact,
         content,
         capacity,
-        // createdAt,
+        createdAt,
         dueDate,
         memberId,
         // modifiedAt,
@@ -44,15 +45,16 @@ const ClubDetail = () => {
         latitude,
         likeCount,
         longitude,
-        nickname;
+        nickname,
+        profileImageUrl;
 
     if (clubDetail && clubDetail.data) {
         ({
-            // boardClubStatus,
+            boardClubStatus,
             contact,
             content,
             capacity,
-            // createdAt,
+            createdAt,
             dueDate,
             memberId,
             // modifiedAt,
@@ -65,6 +67,7 @@ const ClubDetail = () => {
             likeCount,
             longitude,
             nickname,
+            profileImageUrl,
         } = clubDetail.data);
     }
     //좋아요 상태 업데이트
@@ -73,7 +76,7 @@ const ClubDetail = () => {
             setStateLikeCount(likeCount);
         }
     }, [likeCount]);
-    
+
     console.log(clubDetail);
 
     const navigate = useNavigate();
@@ -119,14 +122,14 @@ const ClubDetail = () => {
         axios
             .post(`${import.meta.env.VITE_KEY}/clubs/${boardClubId}/likes`, payload, headers)
             .then((res) => {
-                console.log(res.data.data)
+                console.log(res.data.data);
                 if (res.data.data === '좋아요 취소 완료') {
                     alert('좋아요 취소 하였습니다!');
-                    setStateLikeCount((prev)=>prev-1);
+                    setStateLikeCount((prev) => prev - 1);
                 }
                 if (res.data.data === '좋아요 처리 완료') {
                     alert('게시글을 좋아요 하였습니다!');
-                    setStateLikeCount((prev)=>prev+1);
+                    setStateLikeCount((prev) => prev + 1);
                 }
             })
             .catch((error) => {
@@ -144,6 +147,8 @@ const ClubDetail = () => {
     // console.log(mapdata);
 
     if (clubDetail === undefined || mapdata === undefined) return null;
+
+    const WriterID = localStorage.getItem('memberid');
 
     return (
         <Background $image={backgroundImg} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -182,7 +187,21 @@ const ClubDetail = () => {
                             <h3>연락 방법: </h3>
                             <span onClick={handleNavigateContact}>링크</span>
                         </div>
-                        <UserInfo onClick={handleNavigateProfile}>{nickname}</UserInfo>
+                        <div>
+                            {boardClubStatus === 'BOARD_CLUB_RECRUITING' ? (
+                                <StyledStatusButton>모집 마감</StyledStatusButton>
+                            ) : (
+                                <span>모집 마감됨</span>
+                            )}
+                        </div>
+
+                        <UserInfo onClick={handleNavigateProfile}>
+                            <StyledCreateAt className="date">{moment(createdAt).format('YYYY-MM-DD')}</StyledCreateAt>
+                            <img
+                                src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${profileImageUrl}`}
+                            ></img>
+                            <span>{nickname}</span>
+                        </UserInfo>
                     </ContentInfo>
                 </TitleSection>
                 <ClubMapContainer mapdata={mapdata} />
@@ -191,8 +210,12 @@ const ClubDetail = () => {
                     <p dangerouslySetInnerHTML={{ __html: content }} />
                     <div>
                         <EditContainer>
-                            <button onClick={handleEdit}>수정</button>
-                            <button onClick={handleDelete}>삭제</button>
+                            {WriterID === memberId && (
+                                <>
+                                    <button onClick={handleEdit}>수정</button>
+                                    <button onClick={handleDelete}>삭제</button>
+                                </>
+                            )}
                         </EditContainer>
                         <div>
                             <img src={ViewIcon} alt="ViewCount" />
@@ -310,7 +333,7 @@ const ContentInfo = styled.div`
     align-items: start;
     justify-content: start;
     font-size: 13px;
-    gap: 20px;
+    gap: 10px;
     > div {
         > h3 {
             margin-right: 5px;
@@ -369,5 +392,25 @@ const EditContainer = styled.div`
 
 const UserInfo = styled.div`
     font-weight: bold;
-    margin-left: 250px;
+    margin-left: 100px;
+    > img {
+        margin-right: 5px;
+    }
+`;
+
+const StyledCreateAt = styled.div`
+    color: #696969;
+    opacity: 0.7;
+    font-size: 14px;
+`;
+
+const StyledStatusButton = styled.button`
+    font-size: 12px;
+    background-color: #3884d5;
+    color: #ffffff;
+    padding: 3px 5px 3px 5px;
+    border-radius: 20px;
+    list-style: none;
+    white-space: nowrap;
+    margin: 0px 0px 0px 5px;
 `;
