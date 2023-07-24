@@ -13,7 +13,7 @@ import axios from 'axios';
 //체크박스로 전체삭제같은거 구현할수있게하기
 
 type Data = {
-    standardId: number;
+    boardStandardId: number;
     title: string;
     content: string;
     view?: number;
@@ -98,7 +98,7 @@ const Table = () => {
                 <div>조회</div>
             </Styledwrapper>
             {data.postData.map((post: Data) => {
-                return <Tablecontent post={post} key={post.standardId}></Tablecontent>;
+                return <Tablecontent post={post} key={post.boardStandardId}></Tablecontent>;
             })}
             <PageContainer>
                 <PageButton data={{ value: '이전' }} onClick={PreviouspageHandler} />
@@ -120,10 +120,11 @@ const Table = () => {
 export default Table;
 
 const Tablecontent = ({ post }: CommunityData) => {
-    const url = `/community/detail/${post.standardId}`;
+    const url = `/community/detail/${post.boardStandardId}`;
+    console.log(post);
     return (
         <Styledwrapper>
-            <div>{post.standardId}</div>
+            <div>{post.boardStandardId}</div>
             <StyledLink to={url}>{post.title}</StyledLink>
             <div>{moment(post.createdAt).format('YYYY-MM-DD')}</div>
             <div>{post.view}</div>

@@ -118,7 +118,7 @@ const Tablecontent = ({ post }: Clubdata) => {
             <StyledLink to={url}>{post.title}</StyledLink>
             <div>{moment(post.createdAt).format('YYYY-MM-DD')}</div>
             <div>{post.view}</div>
-            <div>{post.boardClubStatus === 'BOARD_CLUB_RECRUITING' && '❌'}</div>
+            <div>{post.boardClubStatus === 'BOARD_CLUB_RECRUITING' ? '❌' : '⭕'}</div>
         </Styledwrapper>
     );
 };
