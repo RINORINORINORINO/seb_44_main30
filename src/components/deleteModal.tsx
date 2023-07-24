@@ -4,7 +4,8 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
 const DeleteModal = ({ setDeletModal }: any) => {
-    const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const [cookies, setCookie, removeCookie] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    console.log(setCookie);
     const authorizationToken = cookies.AuthorizationToken;
     const refreshToken = cookies.RefreshToken;
     const navigate = useNavigate();
@@ -19,7 +20,11 @@ const DeleteModal = ({ setDeletModal }: any) => {
                 },
             })
             .then(() => {
+                localStorage.removeItem('memberid');
+                removeCookie('AuthorizationToken', { path: '/' });
+                removeCookie('RefreshToken', { path: '/' });
                 navigate('/');
+                location.reload();
             })
             .catch((error) => {
                 console.error('Error deleting item:', error);
