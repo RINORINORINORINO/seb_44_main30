@@ -64,7 +64,7 @@ const Header = () => {
                     <div onClick={() => setIsLogIn(true)}>Login</div>
                 ) : (
                     <div style={{ position: 'relative' }}>
-                        <div style={{ width: '70px', height: '65px' }}>
+                        <div style={{ width: '58px', height: '58px' }}>
                             <ProfileImage
                                 width="100%"
                                 height="100%"
@@ -144,18 +144,21 @@ const StyledHeader = styled.div`
 `;
 const StyledModal = styled.div`
     position: absolute;
-    top: 85px;
+    left: -72px;
+    top: 52px;
     width: 105px;
     border-radius: 10px;
     height: 70px;
     padding: 10px;
     font-family: 'Monomaniac One', sans-serif;
+    font-weight: bold;
     background-color: rgba(255, 255, 255, 0.8);
     color: black;
     font-size: 0.8rem;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    align-items: center;
     border: 1px solid rgba(0, 0, 0, 0.5);
     cursor: none;
     div {
