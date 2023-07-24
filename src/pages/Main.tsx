@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Splashzone from '../../public/Splashzone.png';
+// import Splashzone from '../../public/Splashzone.png';
 import { motion } from 'framer-motion';
 import ContentsCard from '../components/common/ContentsCard';
 import { useQuery } from '@tanstack/react-query';
@@ -79,14 +79,14 @@ const StyledMain = styled.div`
     }
 `;
 
-const StyledContent = styled.div`
-    grid-column: 3 / 8;
-    margin-top: 250px;
-`;
+// const StyledContent = styled.div`
+//     grid-column: 3 / 8;
+//     margin-top: 250px;
+// `;
 
-const StyledImg = styled.img`
-    margin-top: 250px;
-`;
+// const StyledImg = styled.img`
+//     margin-top: 250px;
+// `;
 
 const StyledClub = styled.div`
     width: 100%;
