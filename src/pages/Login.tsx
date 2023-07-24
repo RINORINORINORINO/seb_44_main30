@@ -7,7 +7,6 @@ import axios from 'axios';
 import BACK1 from '../../public/ob3.png';
 import BACK2 from '../../public/ob4.png';
 import RegisterForm from '../components/RegisterForm';
-
 interface FormInput {
     email: string;
     username: string;
@@ -31,8 +30,8 @@ const Login = () => {
                 withCredentials: true,
             });
 
-            // const memberid = response.headers.get('MemberId');
-            console.log(response,'asdfsadfsadfasdfasdfasdf'); //멤버id가 들어와야함
+            //로그인 멤버 아이디 로컬스토리지 저장
+            localStorage.setItem('memberid', response.headers['memberid']);
             const Authorization = response.headers.authorization;
             const Refresh = response.headers.refresh;
 
