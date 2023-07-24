@@ -36,7 +36,7 @@ const Clubtable = () => {
     const getClubdata = (page: number) => {
         const API_URL = import.meta.env.VITE_KEY;
         return axios
-            .get(`${API_URL}/members/mypage/clubs/1?page=${page}&size=20`, {
+            .get(`${API_URL}/members/mypage/clubs/${localStorage.memberid}?page=${page}&size=20`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `${decodeURIComponent(authorizationToken)}`,
