@@ -38,19 +38,25 @@ const DetailCommentSection = ({ boardStandardClubId }: DetailCommentSectionProps
 
         axios
             .post(`${API_URL}/${boardType}`, payload, headers)
-            .then((res) => console.log(res.status))
-            .catch((error) => console.error(error));
+            .then((res) => {
+                console.log(res.status);
+                alert('댓글작성 완료!');
+            })
+            .catch((error) => {
+                if(error.message==="Request failed with status code 401"){
+                    alert('로그인이 필요합니다!');
+                }
+            });
         reset();
-        alert('댓글작성 완료!');
     };
 
     //댓글 조회
     const { data: commentData, isError, isLoading } = useQueryComment(boardStandardClubId, boardType);
-    if(isLoading){
-        return <div>데이터를 불러오는 중</div>
+    if (isLoading) {
+        return <div>데이터를 불러오는 중</div>;
     }
-    if(isError){
-        return <div>데이터를 불러오는데 실패하였습니다.</div>
+    if (isError) {
+        return <div>데이터를 불러오는데 실패하였습니다.</div>;
     }
     return (
         <CommentSection>
@@ -68,7 +74,9 @@ const DetailCommentSection = ({ boardStandardClubId }: DetailCommentSectionProps
                 </StyledForm>
             </CreateCommentSpace>
             <div>
-                {commentData.data?.map((data)=><Comment commentData={data} boardStandardClubId={boardStandardClubId} />)}
+                {commentData.data?.map((data) => (
+                    <Comment commentData={data} boardStandardClubId={boardStandardClubId} />
+                ))}
             </div>
         </CommentSection>
     );
