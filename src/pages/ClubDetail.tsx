@@ -11,6 +11,7 @@ import DetailCommentSection from '../components/DetailCommentSection.tsx';
 import { useMutation } from '@tanstack/react-query';
 import { usePostHeader } from '../api/getHeader.ts';
 import ClubMapContainer from '../components/clubMap.tsx';
+import moment from 'moment';
 
 interface BackgroundProps {
     $image: string;
@@ -27,11 +28,11 @@ const ClubDetail = () => {
     const { data: clubDetail } = useClubBoardDetail(numberBoardClubId);
 
     let //
-        // boardClubStatus,
+        boardClubStatus,
         contact,
         content,
         capacity,
-        // createdAt,
+        createdAt,
         dueDate,
         memberId,
         // modifiedAt,
@@ -43,15 +44,16 @@ const ClubDetail = () => {
         latitude,
         // likeCount,
         longitude,
-        nickname;
+        nickname,
+        profileImageUrl;
 
     if (clubDetail && clubDetail.data) {
         ({
-            // boardClubStatus,
+            boardClubStatus,
             contact,
             content,
             capacity,
-            // createdAt,
+            createdAt,
             dueDate,
             memberId,
             // modifiedAt,
@@ -64,6 +66,7 @@ const ClubDetail = () => {
             // likeCount,
             longitude,
             nickname,
+            profileImageUrl,
         } = clubDetail.data);
     }
     console.log(clubDetail);
@@ -116,6 +119,8 @@ const ClubDetail = () => {
 
     if (clubDetail === undefined || mapdata === undefined) return null;
 
+    const WriterID = localStorage.getItem('memberid');
+
     return (
         <Background $image={backgroundImg} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <PostContainer>
@@ -153,7 +158,14 @@ const ClubDetail = () => {
                             <h3>연락 방법: </h3>
                             <span onClick={handleNavigateContact}>링크</span>
                         </div>
-                        <UserInfo onClick={handleNavigateProfile}>{nickname}</UserInfo>
+
+                        <UserInfo onClick={handleNavigateProfile}>
+                            <StyledCreateAt className="date">{moment(createdAt).format('YYYY-MM-DD')}</StyledCreateAt>
+                            <img
+                                src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${profileImageUrl}`}
+                            ></img>
+                            <span>{nickname}</span>
+                        </UserInfo>
                     </ContentInfo>
                 </TitleSection>
                 <ClubMapContainer mapdata={mapdata} />
@@ -162,8 +174,12 @@ const ClubDetail = () => {
                     <p dangerouslySetInnerHTML={{ __html: content }} />
                     <div>
                         <EditContainer>
-                            <button onClick={handleEdit}>수정</button>
-                            <button onClick={handleDelete}>삭제</button>
+                            {WriterID === memberId && (
+                                <>
+                                    <button onClick={handleEdit}>수정</button>
+                                    <button onClick={handleDelete}>삭제</button>
+                                </>
+                            )}
                         </EditContainer>
                         <div>
                             <img src={ViewIcon} alt="ViewCount" />
@@ -340,5 +356,14 @@ const EditContainer = styled.div`
 
 const UserInfo = styled.div`
     font-weight: bold;
-    margin-left: 250px;
+    margin-left: 140px;
+    > img {
+        margin-right: 5px;
+    }
+`;
+
+const StyledCreateAt = styled.div`
+    color: #696969;
+    opacity: 0.7;
+    font-size: 14px;
 `;
