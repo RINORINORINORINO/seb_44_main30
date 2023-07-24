@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import backgroundImg from '../assets/Community_background.png';
@@ -9,14 +9,16 @@ import { useQuery } from '@tanstack/react-query';
 import { getDetailCommunityPost } from '../api/CommunityApi/CommunityApi.ts';
 import { RouteParams } from '../types/CommunityTypes.ts';
 import moment from 'moment';
-
+import axios from 'axios';
+import { usePostHeader } from '../api/getHeader.ts';
 type BackgroundStyledProps = {
     $image: string;
 };
 
 const CommunityDetail = () => {
     const { boardStandardId } = useParams<RouteParams>();
-
+    const headers = usePostHeader();
+    const [likeCount, setLikeCount] = useState(0);
     if (!boardStandardId) {
         throw new Error('해당 게시글에 대한 ID가 존재하지 않습니다.');
     }
@@ -39,20 +41,41 @@ const CommunityDetail = () => {
     );
     const detailCommunityData = data || undefined;
     console.log(detailCommunityData);
-
-    // 좋아요 구현 시 사용
-    // const handleLike = useCallback(() => {
-    //     isLiked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
-    //     setIsLiked((prev) => !prev);
-    // }, [isLiked]);
+    useEffect(() => {
+        if (detailCommunityData?.likeCount !== undefined) {
+            setLikeCount(detailCommunityData.likeCount);
+        }
+    }, [detailCommunityData]);
+    // 좋아요 요청
+    const handleLike = () => {
+        const payload = {};
+        axios
+            .post(`${import.meta.env.VITE_KEY}/standards/${boardStandardId}/likes`, payload, headers)
+            .then((res) => {
+                console.log(res.data.data)
+                if (res.data.data === '좋아요 취소 완료') {
+                    alert('좋아요 취소 하였습니다!');
+                    setLikeCount((prev)=>prev-1);
+                }
+                if (res.data.data === '좋아요 처리 완료') {
+                    alert('게시글을 좋아요 하였습니다!');
+                    setLikeCount((prev)=>prev+1);
+                }
+            })
+            .catch((error) => {
+                if (error.message === 'Request failed with status code 500') {
+                    alert('로그인이 필요합니다');
+                }
+            });
+    };
 
     const hanldeNavigatePrev = () => {
         navigate(-1);
-    }
+    };
 
     const handleNavigateProfile = () => {
         navigate(`/mypage`, { state: detailCommunityData?.memberId });
-    }
+    };
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -75,7 +98,7 @@ const CommunityDetail = () => {
                     <div>
                         <div>
                             <h3>관련태그: </h3>
-                            <span className="tag">{detailCommunityData.tag || '태그없음'}</span>
+                            <span className="tag">{detailCommunityData.tags[0].tagName}</span>
                         </div>
                         <div>
                             <span className="date">{moment(detailCommunityData?.createdAt).format('YYYY-MM-DD')}</span>
@@ -93,12 +116,12 @@ const CommunityDetail = () => {
                     commentCount={detailCommunityData?.commentCount}
                     view={detailCommunityData?.view}
                     content={detailCommunityData?.content}
-                    handleLike={detailCommunityData?.handleLike}
+                    handleLike={handleLike}
                     isLiked={detailCommunityData?.isLiked}
-                    likeCount={detailCommunityData?.likeCount}
-                    memberId={detailCommunityData?.member?.memberId}
+                    likeCount={likeCount}
+                    memberId={detailCommunityData?.memberId}
                     boardStandardId={detailCommunityData?.boardStandardId}
-                    tag={detailCommunityData?.tag}
+                    tag={detailCommunityData?.tags[0].tagName}
                 />
                 <DetailCommentSection boardStandardClubId={Number(boardStandardId)} />
             </PostContainer>

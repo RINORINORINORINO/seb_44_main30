@@ -14,7 +14,7 @@ interface FormInput {
 }
 
 const Login = () => {
-    const [cookies, setCookie] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const [,setCookie] = useCookies(['AuthorizationToken', 'RefreshToken']);
     const {
         register,
         handleSubmit,
@@ -23,7 +23,6 @@ const Login = () => {
 
     const onSubmit = async (data: FormInput) => {
         const API_URL = import.meta.env.VITE_KEY;
-        console.log(data);
 
         try {
             const response = await axios.post(`${API_URL}/auth/login`, data, {
@@ -48,7 +47,6 @@ const Login = () => {
     };
 
     const navigate = useNavigate();
-    console.log(cookies);
 
     return (
         <StyledCover initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

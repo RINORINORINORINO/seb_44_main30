@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { RootState } from '../store/store.tsx';
 import axios, { AxiosError } from 'axios';
 import ConfirmModal from '../components/common/ConfirmModal.tsx';
-// import ReactQuill from 'react-quill';
+
 
 import { usePostHeader } from '../api/getHeader.ts';
 type FormData = {
@@ -34,7 +34,7 @@ const CommunityCreate = () => {
     const {
         register,
         handleSubmit,
-        // control,
+
         formState: { errors },
     } = useForm<FormData>({
         defaultValues: {
@@ -68,7 +68,6 @@ const CommunityCreate = () => {
         const API_URL = import.meta.env.VITE_KEY;
         const englishTagName = getKeyByValue(tags, data.tag);
         const postPayload = {
-            memberId: 3, // 이 부분은 로그인한 유저의 ID로 수정
             title: data.title,
             content: data.content,
             tags: [{ tagName: englishTagName }],
@@ -76,7 +75,7 @@ const CommunityCreate = () => {
         const patchPayload = {
             title: data.title,
             content: data.content,
-            // tag: englishTagName,
+            tags: [{ tagName: englishTagName }],
         };
 
         if (location.state === 'EditMode') {
@@ -127,21 +126,6 @@ const CommunityCreate = () => {
         };
     }, [dispatch]);
 
-    // const toolbarOptions = [
-    //     [{ header: '1' }, { header: '2' }],
-    //     [{ size: [] }],
-    //     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    //     [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
-    //     [
-    //         {
-    //             color: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
-    //         },
-    //         {
-    //             background: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
-    //         },
-    //     ],
-    // ];
-
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <FormContainer onSubmit={handleSubmit(onSubmit)}>
@@ -149,13 +133,14 @@ const CommunityCreate = () => {
                     <TitleText>모두가 당신의 이야기를 듣고 싶어합니다!</TitleText>
                     <TagWarp>
                         <TagCartegory htmlFor="communityTag">카테고리</TagCartegory>
-                        <select {...register('tag')} id="tag">
+                        <select {...register('tag', {required:'태그를 선택해주세요'})} id="tag">
                             {Object.values(tags).map((tagName, idx) => (
                                 <option key={idx} value={tagName}>
                                     {tagName}
                                 </option>
                             ))}
                         </select>
+                        {errors.tag && <div><ErrorMessage>{errors?.tag.message}</ErrorMessage></div>}
                     </TagWarp>
                     <Title>
                         <Input
@@ -178,20 +163,6 @@ const CommunityCreate = () => {
                             })}
                         />
                         {errors.content && <ErrorMessage>{errors?.content.message}</ErrorMessage>}
-                        {/* <Controller
-                            name="content"
-                            control={control}
-                            defaultValue=""
-                            rules={{
-                                required: '내용을 입력해주세요',
-                                minLength: { value: 30, message: '30자 이상 입력해주세요' },
-                                maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
-                            }}
-                            render={({ field }) => (
-                                <StyledReactQuill {...field} modules={{ toolbar: toolbarOptions }} />
-                            )}
-                        /> */}
-                        {errors.content && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
                         <button onClick={() => setIsModalOpen(true)}>취소</button>
