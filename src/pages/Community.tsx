@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import backgroundImg from '../assets/Community_background.png';
+import backgroundImg from '../../public/commubackk.png';
 import PageButton from '../components/PageButton';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import ScrollBanner from '../components/common/ScrollBanner.tsx';

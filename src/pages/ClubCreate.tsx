@@ -84,6 +84,7 @@ const ClubCreate = () => {
         setValue,
         handleSubmit,
         control,
+        getValues,
         formState: { errors },
     } = useForm<FormData>({
         defaultValues: {
@@ -212,7 +213,18 @@ const ClubCreate = () => {
                     <TagContainer>
                         <TagWarp>
                             <TagCartegory htmlFor="capacity">모집인원</TagCartegory>
-                            <input {...register('capacity')} id="capacity" placeholder="숫자를 입력해주세요"></input>
+                            <input
+                                {...register('capacity', {
+                                    required: '숫자를 입력해주세요!',
+                                    pattern: {
+                                        value: /^\d+$/, // 숫자만 허용하는 정규 표현식
+                                        message: '숫자만 입력해주세요!', // 검증 실패시 나타낼 메시지
+                                    },
+                                })}
+                                id="capacity"
+                                placeholder="숫자를 입력해주세요"
+                            />
+                            {errors.capacity && <small>{errors.capacity.message}</small>}
                         </TagWarp>
                         <TagWarp>
                             <TagCartegory htmlFor="contactRoute">연락 방법</TagCartegory>
@@ -223,8 +235,24 @@ const ClubCreate = () => {
                                     </option>
                                 ))}
                             </select>
-                            <input {...register('contact')} type="text" />
+                            <input
+                                {...register('contact', {
+                                    validate: (value) => {
+                                        const contactRoute = getValues('contactRoute');
+                                        let pattern: RegExp;
+                                        if (contactRoute === '오픈채팅') {
+                                            pattern = /^https:\/\/open\.kakao\.com\/o\/\S*$/;
+                                        } else if (contactRoute === '구글 폼') {
+                                            pattern = /^https:\/\/docs\.google\.com\/forms\/\S*$/;
+                                        }
+                                        return pattern?.test(value) || '유효하지 않은 URL입니다!';
+                                    },
+                                })}
+                                type="text"
+                            />
+                            {errors.contact && <small>{errors?.contact?.message}</small>}
                         </TagWarp>
+
                         <TagWarp>
                             <TagCartegory htmlFor="clubTag">모집 활동</TagCartegory>
                             <select {...register('clubTag')} id="clubTag">
