@@ -167,18 +167,18 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
                     {isLiked ? (
                         <>
                             <img src={LikeFilledIcon} onClick={handleLike} />
-                            <span>{likeCount}</span>
+                            <small>{likeCount}</small>
                         </>
                     ) : (
                         <>
                             <img src={LikeIcon} onClick={handleLike} />
-                            <span>{likeCount}</span>
+                            <small>{likeCount}</small>
                         </>
                     )}
                     <img src={ViewsIcon} />
-                    <span>{communityProps ? communityView : clubView}</span>
+                    <small>{communityProps ? communityView : clubView}</small>
                     <img src={MessageIcon} />
-                    <span>{communityProps ? communityCommentCount || 0 : clubCommentCount || 0}</span>
+                    <small>{communityProps ? communityCommentCount || 0 : clubCommentCount || 0}</small>
                 </ContentsInfo>
             </InfoContainer>
         </CardWarp>
@@ -314,14 +314,15 @@ const ContentsInfo = styled.div`
     display: flex;
     align-items: center;
     padding-top: 10px;
+    margin: 0 10px 0 10px;
     > img {
         width: 20px;
         height: 20px;
-        margin-left: 20px;
+        margin-left: 15px;
         filter: opacity(0.4) drop-shadow(0 0 0 #565656);
     }
-    > span {
-        margin-left: 5px;
+    > small {
+        margin-left: 3px;
         font-weight: 500;
     }
 `;

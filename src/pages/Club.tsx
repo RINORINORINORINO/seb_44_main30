@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import BackgroundImg from '../assets/oceanbeach.png';
+import BackgroundImg from '../../public/clubbackkk.png';
 import ScrollBanner from '../components/common/ScrollBanner';
 import ContentsCard from '../components/common/ContentsCard';
 import TagSearchSection from '../components/common/TagSearchSection.tsx';
@@ -100,8 +100,9 @@ const ContentContainer = styled.div`
     flex-direction: column;
     width: 100%;
     max-width: 1280px;
-    margin: 7rem;
-    padding-top: 5vh;
+    /* margin: 7rem; */
+    /* padding-top: 5vh; */
+    margin-bottom: 10px;
 `;
 
 const CardSection = styled.section`
