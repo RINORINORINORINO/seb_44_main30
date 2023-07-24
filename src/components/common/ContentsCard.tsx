@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Tag from './Tag';
 import ViewsIcon from '../../../public/view.png';
-import MessageIcon from '../../../public/bubble-chat.png';
+
 import LikeIcon from '../../assets/heart (1).png';
-import LikeFilledIcon from '../../assets/Like_filled.svg';
+
 import { savePosition } from '../../store/scroll.ts';
 import { useDispatch } from 'react-redux';
-
+import { usePostHeader } from '../../api/getHeader.ts';
+import axios from 'axios';
 // interface PostProps {
 //     memberId: number;
 //     title: string;
@@ -52,15 +53,14 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
         title: communityTitle,
         content: communityContent,
         view: communityView,
-        commentCount: communityCommentCount,
+        // commentCount: communityCommentCount,
         nickname: communityNickname,
         profileImageUrl: communitProfileImageUrl,
         // member,
         tags: communityTags,
         // registeredAt,
         // modifiedAt,
-        like,
-        memberLiked = [],
+        likeCount: communityLikeCount,
         boardStandardId,
     } = communityProps || {};
 
@@ -68,20 +68,19 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
         title: clubTitle,
         content: clubContent,
         view: clubView,
-        commentCount: clubCommentCount,
+        // commentCount: clubCommentCount,
         nickname: clubNickname,
         profileImageUrl: clubProfileImageUrl,
         boardClubId,
         tags,
         dueDate,
         boardClubStatus,
-        likeCount: clubLikeCount = 0, //[게시글에 대한 좋아요 갯수]
-        memberLiked: clubMemberLiked = [],
+        likeCount: clubLikeCount, //[게시글에 대한 좋아요 갯수]
     } = clubProps || {};
 
     console.log(communityProps);
     console.log(clubProps);
-
+    const headers = usePostHeader();
     const [clubStatus, setClubStatus] = useState(boardClubStatus);
     useEffect(() => {
         const now = new Date();
@@ -96,14 +95,13 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
 
     const dispatch = useDispatch();
     const loginId = 1; //useSelector 사용
-    const [likeCount, setLikeCount] = useState(like || clubLikeCount);
-    const [isLiked, setIsLiked] = useState((memberLiked || clubMemberLiked).includes(loginId));
+    const [likeCount, setLikeCount] = useState(boardClubId ? clubLikeCount : communityLikeCount);
     const navigate = useNavigate();
     //props 변경될 때 상태 최신화 위함
     useEffect(() => {
-        setLikeCount(like || clubLikeCount);
-        setIsLiked((memberLiked || clubMemberLiked).includes(loginId));
-    }, [like, clubLikeCount, memberLiked, clubMemberLiked, loginId]);
+        setLikeCount(boardClubId ? clubLikeCount : communityLikeCount);
+        // setIsLiked((memberLiked || clubMemberLiked).includes(loginId));
+    }, [clubLikeCount, communityLikeCount, loginId]);
 
     const moveToDetail = () => {
         if (type === 'community') {
@@ -115,11 +113,31 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
         }
     };
 
-    //좋아요 하트색,숫자 상태 변경 + API 요청 추가 필요
-    const handleLike = useCallback(() => {
-        isLiked ? setLikeCount((prev: number) => prev - 1) : setLikeCount((prev: number) => prev + 1);
-        setIsLiked((prev: boolean) => !prev);
-    }, [isLiked]);
+    //좋아요  API 요청 추가 필요
+    const handleLike = () => {
+        const payload = {};
+        const boardType = boardStandardId ? 'standards' : 'clubs';
+        const boardId = boardStandardId || boardClubId;
+
+        axios
+            .post(`${import.meta.env.VITE_KEY}/${boardType}/${boardId}/likes`, payload, headers)
+            .then((res) => {
+                console.log(res.data.data);
+                if (res.data.data === '좋아요 취소 완료') {
+                    alert('좋아요 취소 하였습니다!');
+                    setLikeCount((prev) => prev - 1);
+                }
+                if (res.data.data === '좋아요 처리 완료') {
+                    alert('게시글을 좋아요 하였습니다!');
+                    setLikeCount((prev) => prev + 1);
+                }
+            })
+            .catch((error) => {
+                if (error.message === 'Request failed with status code 500') {
+                    alert('로그인이 필요합니다');
+                }
+            });
+    };
 
     //프로필 페이지로 이동
     const handleNavigateProfile = useCallback(() => {
@@ -164,21 +182,14 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
                     <span onClick={handleNavigateProfile}>{clubNickname || communityNickname}</span>
                 </UserInfo>
                 <ContentsInfo>
-                    {isLiked ? (
-                        <>
-                            <img src={LikeFilledIcon} onClick={handleLike} />
-                            <small>{likeCount}</small>
-                        </>
-                    ) : (
-                        <>
-                            <img src={LikeIcon} onClick={handleLike} />
-                            <small>{likeCount}</small>
-                        </>
-                    )}
+                    <>
+                        <img src={LikeIcon} onClick={handleLike} />
+                        <small>{likeCount}</small>
+                    </>
                     <img src={ViewsIcon} />
                     <small>{communityProps ? communityView : clubView}</small>
-                    <img src={MessageIcon} />
-                    <small>{communityProps ? communityCommentCount || 0 : clubCommentCount || 0}</small>
+                    {/* <img src={MessageIcon} />
+                    <small>{communityProps ? communityCommentCount || 0 : clubCommentCount || 0}</small> */}
                 </ContentsInfo>
             </InfoContainer>
         </CardWarp>

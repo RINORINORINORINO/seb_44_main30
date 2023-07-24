@@ -1,10 +1,10 @@
-import {useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import LikeIcon from '../assets/Like.svg';
-import LikeFilledIcon from '../assets/Like_filled.svg';
+
 import ViewIcon from '../assets/View.svg';
-import CommentIcon from '../assets/Comment.svg';
+
 import { useDeletePost } from '../api/useMutationPost';
 import { useDispatch } from 'react-redux';
 import { savePostData } from '../store/editData';
@@ -27,9 +27,8 @@ const DetailContentSection = ({
     title,
     view,
     content,
-    commentCount,
+    // commentCount,
     handleLike,
-    isLiked,
     likeCount,
     memberId,
     boardStandardId,
@@ -53,7 +52,7 @@ const DetailContentSection = ({
         const boardTypeParam = boardType === 'standards' ? 'community' : 'club';
         navigate(`/${boardTypeParam}/create`, { state: 'EditMode' });
     };
-    console.log(memberId)
+    console.log(memberId);
     return (
         <ContentSection>
             <h1>내용</h1>
@@ -79,19 +78,15 @@ const DetailContentSection = ({
                 {boardType === 'standards' && (
                     <div>
                         <LikeButton onClick={handleLike}>
-                            {isLiked ? (
-                                <img src={LikeFilledIcon} alt="LikeFilled" />
-                            ) : (
-                                <img src={LikeIcon} alt="LikeNotFilled" />
-                            )}
+                            <img src={LikeIcon} alt="LikeNotFilled" />
                         </LikeButton>
                         {likeCount}
                     </div>
                 )}
-                <div>
+                {/* <div>
                     <img src={CommentIcon} alt="CommentCount" />
                     {commentCount}
-                </div>
+                </div> */}
             </div>
         </ContentSection>
     );
