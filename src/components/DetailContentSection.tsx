@@ -43,7 +43,7 @@ const DetailContentSection = ({
     }
 
     const { handleDeletePost, boardType } = useDeletePost(postId);
-    const mockMemberId = 2; //로그인아이디로 변경
+    const loginId = Number(localStorage.getItem('memberid'));
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -53,13 +53,13 @@ const DetailContentSection = ({
         const boardTypeParam = boardType === 'standards' ? 'community' : 'club';
         navigate(`/${boardTypeParam}/create`, { state: 'EditMode' });
     };
-
+    console.log(memberId)
     return (
         <ContentSection>
             <h1>내용</h1>
             <p>{content}</p>
             <div>
-                {memberId === mockMemberId && (
+                {memberId === loginId && (
                     <EditContainer>
                         <button onClick={handleEdit}>수정</button>
                         <button onClick={() => setIsModalOpen(true)}>삭제</button>

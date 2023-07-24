@@ -75,7 +75,7 @@ const CommunityDetail = () => {
                     <div>
                         <div>
                             <h3>관련태그: </h3>
-                            <span className="tag">{detailCommunityData.tag || '태그없음'}</span>
+                            <span className="tag">{detailCommunityData.tags[0].tagName}</span>
                         </div>
                         <div>
                             <span className="date">{moment(detailCommunityData?.createdAt).format('YYYY-MM-DD')}</span>
@@ -96,9 +96,9 @@ const CommunityDetail = () => {
                     handleLike={detailCommunityData?.handleLike}
                     isLiked={detailCommunityData?.isLiked}
                     likeCount={detailCommunityData?.likeCount}
-                    memberId={detailCommunityData?.member?.memberId}
+                    memberId={detailCommunityData?.memberId}
                     boardStandardId={detailCommunityData?.boardStandardId}
-                    tag={detailCommunityData?.tag}
+                    tag={detailCommunityData?.tags[0].tagName}
                 />
                 <DetailCommentSection boardStandardClubId={Number(boardStandardId)} />
             </PostContainer>
