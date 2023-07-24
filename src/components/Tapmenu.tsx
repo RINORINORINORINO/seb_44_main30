@@ -10,6 +10,7 @@ import Table from './Table';
 import Clubtable from './Clubtable';
 import ProfileImage from './style/ProfileImage';
 import { useCookies } from 'react-cookie';
+import dolphin from '../../public/lovepik-dolphin-png-image_401337360_wh1200.png';
 // 포스트요청 게시글작성-> get요청으로 전체 스플래시 트래크 정보를 가져와야겟죠(날짜,tracker-id)  ->개별 splash tracker 조회(개별) ->splash-id
 
 type CalData = {
@@ -110,11 +111,7 @@ const Tabcomponent0 = () => {
                                         key={moment(date).format('YYYY-MM-DD')}
                                         style={{ position: 'relative', top: '-15px' }}
                                     >
-                                        <ProfileImage
-                                            width="40px"
-                                            height="40px"
-                                            url="../../public/lovepik-dolphin-png-image_401337360_wh1200.png"
-                                        ></ProfileImage>
+                                        <ProfileImage width="40px" height="40px" url={dolphin}></ProfileImage>
                                     </div>,
                                 );
                             }

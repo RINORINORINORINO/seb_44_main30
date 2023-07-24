@@ -8,6 +8,7 @@ import getMainclub from '../api/MainApi/MainClubApi';
 import { Loading } from '../components/Lodaing';
 import { CommunityPostData } from '../types/CommunityTypes';
 import { ClubBoardData } from '../types/ClubData';
+import backgroundimage from '../../public/main.png';
 
 const Main = () => {
     const page = 1;
@@ -62,7 +63,7 @@ const Main = () => {
 export default Main;
 
 const StyledMain = styled.div`
-    background-image: url('../../public/main.png');
+    background-image: url(${backgroundimage});
     background-size: cover;
     box-shadow: 5px 2px 2px 2px;
     display: grid;
