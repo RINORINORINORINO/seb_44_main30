@@ -36,7 +36,7 @@ const Clubtable = () => {
     const getClubdata = (page: number) => {
         const API_URL = import.meta.env.VITE_KEY;
         return axios
-            .get(`${API_URL}/members/mypage/clubs/1?page=${page}&size=20`, {
+            .get(`${API_URL}/members/mypage/clubs/${localStorage.memberid}?page=${page}&size=20`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `${decodeURIComponent(authorizationToken)}`,
@@ -118,7 +118,7 @@ const Tablecontent = ({ post }: Clubdata) => {
             <StyledLink to={url}>{post.title}</StyledLink>
             <div>{moment(post.createdAt).format('YYYY-MM-DD')}</div>
             <div>{post.view}</div>
-            <div>{post.boardClubStatus === 'BOARD_CLUB_RECRUITING' && '❌'}</div>
+            <div>{post.boardClubStatus === 'BOARD_CLUB_RECRUITING' ? '❌' : '⭕'}</div>
         </Styledwrapper>
     );
 };

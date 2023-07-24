@@ -7,6 +7,7 @@ import Tabmenu from '../components/Tapmenu';
 import { Loading } from '../components/Lodaing';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useCookies } from 'react-cookie';
+import DeleteModal from '../components/deleteModal';
 
 interface member {
     memberId?: number;
@@ -29,19 +30,20 @@ const Mypage = () => {
     const [validation, setvalidation] = useState('');
     const [upimage, setUpimage] = useState<File | null>(null);
     const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const [deleteModal, setDeletModal] = useState(false);
     const authorizationToken = cookies.AuthorizationToken;
     const refreshToken = cookies.RefreshToken;
     const API_URL = import.meta.env.VITE_KEY;
 
-    const memberId = 1; //memberId Link로받던가 아니면  header포함해서받던가하기
+    //memberId Link로받던가 아니면  header포함해서받던가하기
     const { data, isLoading, isError, error } = useQuery<any, Error>({
-        queryKey: ['memberinfo', memberId],
-        queryFn: () => getInfos(memberId),
+        queryKey: ['memberinfo', localStorage.memberid],
+        queryFn: () => getInfos(localStorage.memberid),
     });
 
     const patchInfos = (edit: member) =>
         axios
-            .patch(`${API_URL}/members/${memberId}`, edit, {
+            .patch(`${API_URL}/members/${localStorage.memberid}`, edit, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `${decodeURIComponent(authorizationToken)}`,
@@ -97,7 +99,7 @@ const Mypage = () => {
         formData.append('multipartFile', upimage);
 
         try {
-            const response = await axios.patch(`${API_URL}/members/image/${memberId}`, formData, {
+            const response = await axios.patch(`${API_URL}/members/image/${localStorage.memberid}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `${decodeURIComponent(authorizationToken)}`,
@@ -207,7 +209,7 @@ const Mypage = () => {
                                                 수정
                                             </Styledbutton>
                                         )}
-                                        <Styledbutton>탈퇴</Styledbutton>
+                                        <Styledbutton onClick={() => setDeletModal(true)}>탈퇴</Styledbutton>
                                     </div>
                                 </div>
                             </Block>
@@ -215,6 +217,7 @@ const Mypage = () => {
                                 <Tabmenu></Tabmenu>
                             </Block>
                         </div>
+                        {deleteModal && <DeleteModal setDeletModal={setDeletModal} />}
                     </GridSystem>
                 </div>
             </Background>

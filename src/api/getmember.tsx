@@ -1,5 +1,6 @@
 import axios from 'axios';
 
 export const getInfos = (id: number) => {
-    return axios.get(`http://13.209.142.240:8080/members/${id}`).then((response) => response.data.data);
+    const API_URL = import.meta.env.VITE_KEY;
+    return axios.get(`${API_URL}/members/${id}`).then((response) => response.data.data);
 };
