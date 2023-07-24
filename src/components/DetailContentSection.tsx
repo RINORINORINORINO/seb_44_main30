@@ -1,10 +1,10 @@
-import {useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import LikeIcon from '../assets/Like.svg';
-import LikeFilledIcon from '../assets/Like_filled.svg';
+
 import ViewIcon from '../assets/View.svg';
-import CommentIcon from '../assets/Comment.svg';
+
 import { useDeletePost } from '../api/useMutationPost';
 import { useDispatch } from 'react-redux';
 import { savePostData } from '../store/editData';
@@ -27,9 +27,8 @@ const DetailContentSection = ({
     title,
     view,
     content,
-    commentCount,
+    // commentCount,
     handleLike,
-    isLiked,
     likeCount,
     memberId,
     boardStandardId,
@@ -43,7 +42,7 @@ const DetailContentSection = ({
     }
 
     const { handleDeletePost, boardType } = useDeletePost(postId);
-    const mockMemberId = 2; //로그인아이디로 변경
+    const loginId = Number(localStorage.getItem('memberid'));
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -53,13 +52,13 @@ const DetailContentSection = ({
         const boardTypeParam = boardType === 'standards' ? 'community' : 'club';
         navigate(`/${boardTypeParam}/create`, { state: 'EditMode' });
     };
-
+    console.log(memberId);
     return (
         <ContentSection>
             <h1>내용</h1>
             <p>{content}</p>
             <div>
-                {memberId === mockMemberId && (
+                {memberId === loginId && (
                     <EditContainer>
                         <button onClick={handleEdit}>수정</button>
                         <button onClick={() => setIsModalOpen(true)}>삭제</button>
@@ -79,19 +78,15 @@ const DetailContentSection = ({
                 {boardType === 'standards' && (
                     <div>
                         <LikeButton onClick={handleLike}>
-                            {isLiked ? (
-                                <img src={LikeFilledIcon} alt="LikeFilled" />
-                            ) : (
-                                <img src={LikeIcon} alt="LikeNotFilled" />
-                            )}
+                            <img src={LikeIcon} alt="LikeNotFilled" />
                         </LikeButton>
                         {likeCount}
                     </div>
                 )}
-                <div>
+                {/* <div>
                     <img src={CommentIcon} alt="CommentCount" />
                     {commentCount}
-                </div>
+                </div> */}
             </div>
         </ContentSection>
     );

@@ -1,10 +1,9 @@
-import { Key, useCallback } from 'react';
+import { Key, useCallback, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import backgroundImg from '../assets/Community_background.png';
 import ViewIcon from '../assets/View.svg';
-import CommentIcon from '../assets/Comment.svg';
 import { useClubBoardDetail } from '../api/ClubApi/ClubDataHooks.ts';
 import axios from 'axios';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
@@ -12,6 +11,7 @@ import { useMutation } from '@tanstack/react-query';
 import { usePostHeader } from '../api/getHeader.ts';
 import ClubMapContainer from '../components/clubMap.tsx';
 import moment from 'moment';
+import LikeIcon from '../assets/Like.svg';
 
 interface BackgroundProps {
     $image: string;
@@ -26,6 +26,7 @@ const ClubDetail = () => {
     const { boardClubId } = useParams<{ boardClubId: string }>();
     const numberBoardClubId = boardClubId ? Number(boardClubId) : 0;
     const { data: clubDetail } = useClubBoardDetail(numberBoardClubId);
+    const [stateLikeCount, setStateLikeCount] = useState(0);
 
     let //
         boardClubStatus,
@@ -42,7 +43,7 @@ const ClubDetail = () => {
         addressName,
         placeName,
         latitude,
-        // likeCount,
+        likeCount,
         longitude,
         nickname,
         profileImageUrl;
@@ -63,12 +64,19 @@ const ClubDetail = () => {
             addressName,
             placeName,
             latitude,
-            // likeCount,
+            likeCount,
             longitude,
             nickname,
             profileImageUrl,
         } = clubDetail.data);
     }
+    //좋아요 상태 업데이트
+    useEffect(() => {
+        if (clubDetail?.data.likeCount !== undefined) {
+            setStateLikeCount(likeCount);
+        }
+    }, [likeCount]);
+
     console.log(clubDetail);
 
     const navigate = useNavigate();
@@ -109,6 +117,27 @@ const ClubDetail = () => {
         window.open(contact, '_blank');
     }, [contact]);
 
+    const handleLike = () => {
+        const payload = {};
+        axios
+            .post(`${import.meta.env.VITE_KEY}/clubs/${boardClubId}/likes`, payload, headers)
+            .then((res) => {
+                console.log(res.data.data);
+                if (res.data.data === '좋아요 취소 완료') {
+                    alert('좋아요 취소 하였습니다!');
+                    setStateLikeCount((prev) => prev - 1);
+                }
+                if (res.data.data === '좋아요 처리 완료') {
+                    alert('게시글을 좋아요 하였습니다!');
+                    setStateLikeCount((prev) => prev + 1);
+                }
+            })
+            .catch((error) => {
+                if (error.message === 'Request failed with status code 500') {
+                    alert('로그인이 필요합니다');
+                }
+            });
+    };
     const mapdata = {
         addressName,
         placeName,
@@ -186,8 +215,8 @@ const ClubDetail = () => {
                             {view}
                         </div>
                         <div>
-                            <img src={CommentIcon} alt="CommentCount" />
-                            {/* {commentCount} */}
+                            <img onClick={handleLike} src={LikeIcon} alt="LikeCount" />
+                            {stateLikeCount}
                         </div>
                     </div>
                 </ContentSection>

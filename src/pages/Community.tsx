@@ -111,7 +111,12 @@ const Community = () => {
     };
 
     const handleNavigateCreate = () => {
-        navigate('/community/create', { state: 'community' });
+        const loginId = localStorage.getItem('memberid');
+        if (loginId) {
+            navigate('/community/create', { state: 'community' });
+        } else {
+            alert('로그인이 필요합니다!');
+        }
     };
 
     //페이지번호 버튼 클릭 시, 페이지 변경

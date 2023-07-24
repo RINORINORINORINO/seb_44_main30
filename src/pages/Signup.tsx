@@ -49,7 +49,9 @@ const Signup = () => {
                 navigate('/login');
             })
             .catch((error) => {
-                console.error('오류:', error);
+                if(error.message==='Request failed with status code 409'){
+                    alert('중복되는 회원 정보가 존재합니다. 다시 시도해주세요!')
+                }
             });
     };
     const navigate = useNavigate();

@@ -45,9 +45,7 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
     const location = useLocation();
     const boardType = location.pathname.split('/')[1] === 'community' ? 'standardcomments' : 'clubcomments';
     const boardCommentId = boardClubCommentId || boardStandardCommentId;
-    // const loginId = 3; //storage사용
-
-    // const loginId = 3; //storage사용
+    const loginId = Number(localStorage.getItem('memberid'));
 
     const { register, handleSubmit, reset } = useForm<CommentInput>({
         mode: 'onSubmit',
@@ -157,8 +155,7 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
                 <ContentBox>{commentContent}</ContentBox>
             )}
             <DateBox>
-                {/* memberId === loginId &&  */}
-                {
+                {memberId === loginId && (
                     <div className="edit">
                         {isEditOn || (
                             <div>
@@ -174,7 +171,7 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
                             </div>
                         )}
                     </div>
-                }
+                )}
                 <div>{moment(createdAt).format('YYYY-MM-DD')}</div>
             </DateBox>
         </CommentContainer>
