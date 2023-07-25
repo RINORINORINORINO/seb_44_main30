@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import Block from '../components/style/Wrapper';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { getInfos } from '../api/getmember';
 import Tabmenu from '../components/Tapmenu';
 import { Loading } from '../components/Lodaing';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -34,6 +33,19 @@ const Mypage = () => {
     const authorizationToken = cookies.AuthorizationToken;
     const refreshToken = cookies.RefreshToken;
     const API_URL = import.meta.env.VITE_KEY;
+
+    const getInfos = (id: number) => {
+        const API_URL = import.meta.env.VITE_KEY;
+        return axios
+            .get(`${API_URL}/members/${id}`, {
+                headers: {
+                    Authorization: `${decodeURIComponent(authorizationToken)}`,
+                    Refresh: `${refreshToken}`,
+                    withCredentials: true,
+                },
+            })
+            .then((response) => response.data.data);
+    };
 
     //memberId Link로받던가 아니면  header포함해서받던가하기
     const { data, isLoading, isError, error } = useQuery<any, Error>({
