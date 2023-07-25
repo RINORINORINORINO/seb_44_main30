@@ -151,85 +151,90 @@ const ClubDetail = () => {
     const WriterID = localStorage.getItem('memberid');
 
     return (
-        <Background $image={backgroundImg} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <PostContainer>
-                <TitleSection>
-                    <button onClick={hanldeNavigatePrev}>목록</button>
-                    <Title>
-                        <h1>{title}</h1>
-                    </Title>
-                    <ContentInfo>
-                        <div>
-                            <h3>관련 태그: </h3>
-                            {tags &&
-                                tags.map(
-                                    (
-                                        tag: {
-                                            tagName: string | undefined | null;
-                                        },
-                                        idx: Key | null | undefined,
-                                    ) => (
-                                        <span key={idx} className="tag">
-                                            {tag.tagName}
-                                        </span>
-                                    ),
+        <>
+            {boardClubStatus === 'BOARD_CLUB_COMPLETED' && <Overlay />}
+            <Background $image={backgroundImg} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <PostContainer>
+                    <TitleSection>
+                        <button onClick={hanldeNavigatePrev}>목록</button>
+                        <Title>
+                            <h1>{title}</h1>
+                        </Title>
+                        <ContentInfo>
+                            <div>
+                                <h3>관련 태그: </h3>
+                                {tags &&
+                                    tags.map(
+                                        (
+                                            tag: {
+                                                tagName: string | undefined | null;
+                                            },
+                                            idx: Key | null | undefined,
+                                        ) => (
+                                            <span key={idx} className="tag">
+                                                {tag.tagName}
+                                            </span>
+                                        ),
+                                    )}
+                            </div>
+                            <div>
+                                <h3>모집 인원: </h3>
+                                <span>{capacity} 명</span>
+                            </div>
+                            <div>
+                                <h3>모집 마감일: </h3>
+                                <span>{dueDate}</span>
+                            </div>
+                            <div>
+                                <h3>연락 방법: </h3>
+                                <span onClick={handleNavigateContact}>링크</span>
+                            </div>
+                            <div>
+                                {boardClubStatus === 'BOARD_CLUB_RECRUITING' ? (
+                                    <StyledStatusButton>모집 마감</StyledStatusButton>
+                                ) : (
+                                    <span>모집 마감됨</span>
                                 )}
-                        </div>
-                        <div>
-                            <h3>모집 인원: </h3>
-                            <span>{capacity} 명</span>
-                        </div>
-                        <div>
-                            <h3>모집 마감일: </h3>
-                            <span>{dueDate}</span>
-                        </div>
-                        <div>
-                            <h3>연락 방법: </h3>
-                            <span onClick={handleNavigateContact}>링크</span>
-                        </div>
-                        <div>
-                            {boardClubStatus === 'BOARD_CLUB_RECRUITING' ? (
-                                <StyledStatusButton>모집 마감</StyledStatusButton>
-                            ) : (
-                                <span>모집 마감됨</span>
-                            )}
-                        </div>
+                            </div>
 
-                        <UserInfo onClick={handleNavigateProfile}>
-                            <StyledCreateAt className="date">{moment(createdAt).format('YYYY-MM-DD')}</StyledCreateAt>
-                            <img
-                                src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${profileImageUrl}`}
-                            ></img>
-                            <span>{nickname}</span>
-                        </UserInfo>
-                    </ContentInfo>
-                </TitleSection>
-                <ClubMapContainer mapdata={mapdata} />
-                <ContentSection>
-                    <h1>내용</h1>
-                    <p dangerouslySetInnerHTML={{ __html: content }} />
-                    <div>
-                        <EditContainer>
-                            {WriterID === memberId && (
-                                <>
-                                    <button onClick={handleEdit}>수정</button>
-                                    <button onClick={handleDelete}>삭제</button>
-                                </>
-                            )}
-                        </EditContainer>
+                            <UserInfo onClick={handleNavigateProfile}>
+                                <StyledCreateAt className="date">
+                                    {moment(createdAt).format('YYYY-MM-DD')}
+                                </StyledCreateAt>
+                                <img
+                                    src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${profileImageUrl}`}
+                                ></img>
+                                <span>{nickname}</span>
+                            </UserInfo>
+                        </ContentInfo>
+                    </TitleSection>
+                    <ClubMapContainer mapdata={mapdata} />
+                    <ContentSection>
+                        <h1>내용</h1>
+                        <p dangerouslySetInnerHTML={{ __html: content }} />
                         <div>
-                            <img src={ViewIcon} alt="ViewCount" />
-                            {view}
+                            <EditContainer>
+                                {Number(WriterID) === memberId && (
+                                    <>
+                                        <button onClick={handleEdit}>수정</button>
+                                        <button onClick={handleDelete}>삭제</button>
+                                    </>
+                                )}
+                            </EditContainer>
+                            <div>
+                                <img src={ViewIcon} alt="ViewCount" />
+                                {view}
+                            </div>
+                            <div>
+                                <img onClick={handleLike} src={LikeIcon} alt="LikeCount" />
+                                {stateLikeCount}
+                            </div>
                         </div>
-                        <div>
-                            <img onClick={handleLike} src={LikeIcon} alt="LikeCount" />
-                            {stateLikeCount}
-                        </div>
-                    </div>
-                </ContentSection>
-                <DetailCommentSection boardStandardClubId={Number(boardClubId)} />
-            </PostContainer>
-        </Background>
+                    </ContentSection>
+                    <DetailCommentSection boardStandardClubId={Number(boardClubId)} />
+                </PostContainer>
+            </Background>
+        </>
     );
 };
 
@@ -413,4 +418,13 @@ const StyledStatusButton = styled.button`
     list-style: none;
     white-space: nowrap;
     margin: 0px 0px 0px 5px;
+`;
+
+const Overlay = styled(motion.div)`
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
 `;
