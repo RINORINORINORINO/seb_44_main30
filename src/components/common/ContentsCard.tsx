@@ -10,42 +10,6 @@ import { savePosition } from '../../store/scroll.ts';
 import { useDispatch } from 'react-redux';
 import { usePostHeader } from '../../api/getHeader.ts';
 import axios from 'axios';
-// interface PostProps {
-//     memberId: number;
-//     title: string;
-//     content: string;
-//     view: number;
-//     commentCount: number;
-//     type: string;
-//     profileImageUrl: string;
-//     nickname: string;
-// }
-
-// interface CommunityPostProps extends PostProps {
-//     communityProps: {
-//         memberProfileImg: string; //[작성자 프로필 이미지 소스]
-//         name: string; //[작성자 닉네임]
-//         tag: string;
-//         registeredAt: string;
-//         modifiedAt: string | null;
-//         like: number; //[게시글에 대한 좋아요 갯수]
-//         memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열]
-//         boardStandardId: number; //[게시글 자체에 대한 ID]
-//     };
-// }
-
-// interface ClubPostProps extends PostProps {
-//     clubProps: {
-//         boardClubId: number;
-//         tags: { tagName: string }[];
-//         dueDate: string;
-//         boardClubStatus: string;
-//         likeCount: number;
-//         memberLiked: Array<number>;
-//     };
-// }
-
-// type CardProps = CommunityPostProps | ClubPostProps;
 
 export default function ContentsCard({ memberId, communityProps, clubProps, type }: any) {
     const {
@@ -91,7 +55,7 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
             setClubStatus('BOARD_CLUB_COMPLETED');
         }
     }, [dueDate, clubStatus]);
-    const isCompleted = clubStatus === 'BOARD_CLUB_COMPLETED';
+    const isCompleted = boardClubStatus === 'BOARD_CLUB_COMPLETED' || clubStatus === 'BOARD_CLUB_COMPLETED';
 
     const dispatch = useDispatch();
     const loginId = 1; //useSelector 사용
@@ -139,17 +103,9 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
             });
     };
 
-    //프로필 페이지로 이동
     const handleNavigateProfile = useCallback(() => {
         navigate(`/mypage`, { state: memberId });
     }, [memberId]);
-
-    // 날짜 어떻게 받을 건지 상의 필요.(포맷팅 된 상태 or Not)
-    // 날짜 포맷팅 임의로
-    // const dateStr = modifiedAt || registeredAt || '';
-    // const datePart = dateStr.split('T')[0];
-    // const dateArr = datePart.split('-');
-    // const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
 
     return (
         <CardWarp isCompleted={isCompleted}>
@@ -158,7 +114,7 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
                     <h3>{communityProps ? communityTitle : clubTitle}</h3>
                 </TitleContainer>
                 <ContentsContainer onClick={moveToDetail}>
-                    <p>{communityProps ? communityContent : clubContent}</p>
+                    <p dangerouslySetInnerHTML={{ __html: communityProps ? communityContent : clubContent }} />
                 </ContentsContainer>
                 <TagContainer>
                     {communityProps &&
