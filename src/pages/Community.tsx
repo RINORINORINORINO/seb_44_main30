@@ -77,51 +77,49 @@ const Community = () => {
         }
     }, [allCommunityData, page]);
 
+    //저장된 스크롤 위치로 이동
     useEffect(() => {
         const timer = setTimeout(() => {
-            window.scrollTo(0, scrollPosition);
-        }, 500); // 0.5초 후에 실행
+            window.scroll({
+                top: scrollPosition, 
+                behavior: 'smooth'
+            });
+        }, 500); // 데이터가 받아와 지고나서 실행되어야하기 때문에, 0.5초 후에 실행
         return () => clearTimeout(timer);
     }, [page]);
 
     //다음|이전 버튼 클릭 시, 페이지 변경
     const handlePageList = (e: React.MouseEvent<HTMLLIElement>) => {
         if (e.currentTarget.innerText === '>>' && pageArr[pageArr.length - 1] !== totalPageNum) {
-            dispatch(savePosition(window.scrollY));
+            dispatch(savePosition(1140));
             navigate(`/community/${currTag}/${keyword}?page=${pageArr[pageArr.length - 1] + 1}`);
         }
 
         if (e.currentTarget.innerText === '<<' && !pageArr.includes(1)) {
-            dispatch(savePosition(window.scrollY));
+            dispatch(savePosition(1140));
             navigate(`/community/${currTag}/${keyword}?page=${pageArr[0] - PAGE_COUNT}`);
         }
     };
 
     const handleMoveByOne = (e: React.MouseEvent<HTMLLIElement>) => {
         if (e.currentTarget.innerText === '>' && page !== totalPageNum) {
-            dispatch(savePosition(window.scrollY));
-
+            dispatch(savePosition(1140));
             navigate(`/community/${currTag}/${keyword}?page=${page + 1}`);
         }
 
         if (e.currentTarget.innerText === '<' && page !== 1) {
-            dispatch(savePosition(window.scrollY));
+            dispatch(savePosition(1140));
             navigate(`/community/${currTag}/${keyword}?page=${page - 1}`);
         }
     };
 
     const handleNavigateCreate = () => {
-        const loginId = localStorage.getItem('memberid');
-        if (loginId) {
-            navigate('/community/create', { state: 'community' });
-        } else {
-            alert('로그인이 필요합니다!');
-        }
+        navigate('/community/create', { state: 'community' });
     };
 
     //페이지번호 버튼 클릭 시, 페이지 변경
     const handleCurrPage = (e: React.MouseEvent<HTMLLIElement>) => {
-        dispatch(savePosition(window.scrollY));
+        dispatch(savePosition(1140));
         const clickedPageNum = Number(e.currentTarget.innerText);
         navigate(`/community/${currTag}/${keyword}?page=${clickedPageNum}`);
     };

@@ -22,7 +22,10 @@ function Club() {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            window.scrollTo(0, scrollPosition);
+            window.scroll({
+                top: scrollPosition, 
+                behavior: 'smooth'
+            });
         }, 500); // 0.5초 후에 실행
         return () => clearTimeout(timer);
     }, [scrollPosition]);
