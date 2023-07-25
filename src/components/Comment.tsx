@@ -91,9 +91,7 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
         setIsEditOn((prev) => !prev);
     };
 
-    const handleNavigateProfile = () => {
-        navigate(`/mypage`, { state: memberId });
-    };
+
 
     const handleEdit = () => {
         setIsEditOn((prev) => !prev);
@@ -131,7 +129,7 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
                     src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${profileImageUrl}`}
                     alt="profile_image"
                 />
-                <div title={`${nickname}`} onClick={handleNavigateProfile}>
+                <div title={`${nickname}`}>
                     {nickname}
                 </div>
             </UserInfoBox>
@@ -227,11 +225,6 @@ const UserInfoBox = styled.div`
     }
     > div {
         font-weight: 600;
-
-        &:hover {
-            color: #3884d5;
-            cursor: pointer;
-        }
     }
 `;
 const ContentBox = styled.p`

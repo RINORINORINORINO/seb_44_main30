@@ -73,9 +73,7 @@ const CommunityDetail = () => {
         navigate(-1);
     };
 
-    const handleNavigateProfile = () => {
-        navigate(`/mypage`, { state: detailCommunityData?.memberId });
-    };
+
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -105,7 +103,7 @@ const CommunityDetail = () => {
                             <img
                                 src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${detailCommunityData?.profileImageUrl}`}
                             />
-                            <span className="name" onClick={handleNavigateProfile}>
+                            <span className="name">
                                 {detailCommunityData?.nickname}
                             </span>
                         </div>
@@ -199,10 +197,6 @@ const TitleSection = styled.section`
             }
             > span.name {
                 font-weight: 600;
-                &:hover {
-                    color: #3884d5;
-                    cursor: pointer;
-                }
             }
         }
     }

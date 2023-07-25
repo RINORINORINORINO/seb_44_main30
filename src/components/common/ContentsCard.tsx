@@ -103,9 +103,7 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
             });
     };
 
-    const handleNavigateProfile = useCallback(() => {
-        navigate(`/mypage`, { state: memberId });
-    }, [memberId]);
+
 
     return (
         <CardWarp isCompleted={isCompleted}>
@@ -135,7 +133,7 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
                         }`}
                         className="user-icon"
                     />
-                    <span onClick={handleNavigateProfile}>{clubNickname || communityNickname}</span>
+                    <span>{clubNickname || communityNickname}</span>
                 </UserInfo>
                 <ContentsInfo>
                     <>
@@ -271,9 +269,6 @@ const UserInfo = styled.div`
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        &:hover {
-            cursor: pointer;
-        }
     }
 `;
 
