@@ -12,3 +12,9 @@ export async function getClubBoardDetail(boardClubId: number) {
     const response = await axios.get(`${API_URL}/clubs/${boardClubId}`, {});
     return response.data;
 }
+
+// export async function editClubStatus(clubId: number, data: any) {
+//     const API_URL = import.meta.env.VITE_KEY;
+//     const response = await axios.patch(`${API_URL}/clubs/${clubId}`, data);
+//     return response.data;
+// }

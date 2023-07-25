@@ -1,6 +1,7 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { getClubBoardData, getClubBoardDetail } from './ClubApi.ts';
 import { ClubResponse } from '../../types/ClubData';
+// import { editClubStatus } from './ClubApi.ts';
 
 export default function useClubBoardData() {
     return useInfiniteQuery<ClubResponse, Error>(
@@ -20,3 +21,7 @@ export default function useClubBoardData() {
 export function useClubBoardDetail(boardClubId: number) {
     return useQuery(['clubDetailData', boardClubId], () => getClubBoardDetail(boardClubId));
 }
+
+// export function useEditClubStatus() {
+//     return useMutation(({ clubId, data }) => editClubStatus(clubId, data));
+// }

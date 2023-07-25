@@ -41,7 +41,16 @@ const Header = () => {
 
     useEffect(() => {
         if (access && refresh && localStorage.memberid) {
-            axios.get(`${API_URL}/members/${localStorage.memberid}`).then((response) => setMember(response.data.data));
+            axios
+                .get(`${API_URL}/members/${localStorage.memberid}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `${decodeURIComponent(access)}`,
+                        Refresh: `${refresh}`,
+                        withCredentials: true,
+                    },
+                })
+                .then((response) => setMember(response.data.data));
             setIsLogIn(true);
         } else {
             setIsLogIn(false);
