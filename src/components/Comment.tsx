@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
@@ -37,7 +37,6 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
         boardClubCommentId = 0,
         boardStandardCommentId = 0,
     } = commentData;
-    const navigate = useNavigate();
     const [isEditOn, setIsEditOn] = useState<boolean>(false);
     const [commentContent, setCommentContent] = useState<string>(content);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -91,9 +90,7 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
         setIsEditOn((prev) => !prev);
     };
 
-    const handleNavigateProfile = () => {
-        navigate(`/mypage`, { state: memberId });
-    };
+
 
     const handleEdit = () => {
         setIsEditOn((prev) => !prev);
@@ -131,7 +128,7 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
                     src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${profileImageUrl}`}
                     alt="profile_image"
                 />
-                <div title={`${nickname}`} onClick={handleNavigateProfile}>
+                <div title={`${nickname}`}>
                     {nickname}
                 </div>
             </UserInfoBox>
@@ -227,11 +224,6 @@ const UserInfoBox = styled.div`
     }
     > div {
         font-weight: 600;
-
-        &:hover {
-            color: #3884d5;
-            cursor: pointer;
-        }
     }
 `;
 const ContentBox = styled.p`

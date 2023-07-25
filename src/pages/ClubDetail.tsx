@@ -87,9 +87,7 @@ const ClubDetail = () => {
         //이동했을 때, 이전 페이지 상태(스크롤위치, 페이지번호, 태그상태)를 유지해야한다.
         //router기능 이용하거나, redux에 저장해서 구현할 것.
     }, [navigate]);
-    const handleNavigateProfile = useCallback(() => {
-        navigate(`/mypage`, { state: memberId });
-    }, [memberId, navigate]);
+
     const handleEdit = useCallback(() => {
         navigate(`/club/create/${boardClubId}`, { state: { clubDetail: clubDetail.data } });
     }, [clubDetail, boardClubId]);
@@ -197,7 +195,7 @@ const ClubDetail = () => {
                                 )}
                             </div>
 
-                            <UserInfo onClick={handleNavigateProfile}>
+                            <UserInfo>
                                 <StyledCreateAt className="date">
                                     {moment(createdAt).format('YYYY-MM-DD')}
                                 </StyledCreateAt>

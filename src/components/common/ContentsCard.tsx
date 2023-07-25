@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Tag from './Tag';
@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { usePostHeader } from '../../api/getHeader.ts';
 import axios from 'axios';
 
-export default function ContentsCard({ memberId, communityProps, clubProps, type }: any) {
+export default function ContentsCard({ communityProps, clubProps, type }: any) {
     const {
         // memberId: communityMemberId,
         title: communityTitle,
@@ -103,9 +103,7 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
             });
     };
 
-    const handleNavigateProfile = useCallback(() => {
-        navigate(`/mypage`, { state: memberId });
-    }, [memberId]);
+
 
     return (
         <CardWarp isCompleted={isCompleted}>
@@ -135,7 +133,7 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
                         }`}
                         className="user-icon"
                     />
-                    <span onClick={handleNavigateProfile}>{clubNickname || communityNickname}</span>
+                    <span>{clubNickname || communityNickname}</span>
                 </UserInfo>
                 <ContentsInfo>
                     <>
@@ -271,9 +269,6 @@ const UserInfo = styled.div`
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        &:hover {
-            cursor: pointer;
-        }
     }
 `;
 
