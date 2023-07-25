@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
@@ -37,7 +37,6 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
         boardClubCommentId = 0,
         boardStandardCommentId = 0,
     } = commentData;
-    const navigate = useNavigate();
     const [isEditOn, setIsEditOn] = useState<boolean>(false);
     const [commentContent, setCommentContent] = useState<string>(content);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);

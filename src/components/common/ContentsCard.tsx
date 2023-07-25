@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Tag from './Tag';
@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { usePostHeader } from '../../api/getHeader.ts';
 import axios from 'axios';
 
-export default function ContentsCard({ memberId, communityProps, clubProps, type }: any) {
+export default function ContentsCard({ communityProps, clubProps, type }: any) {
     const {
         // memberId: communityMemberId,
         title: communityTitle,
