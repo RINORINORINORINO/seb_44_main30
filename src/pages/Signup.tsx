@@ -7,6 +7,8 @@ import axios from 'axios';
 
 import BACK1 from '../../public/ob1.png';
 import BACK2 from '../../public/ob2.png';
+import { useCookies } from 'react-cookie';
+import { useEffect } from 'react';
 
 type SignupInputs = {
     Name: string;
@@ -22,6 +24,8 @@ type BackgroundStyledProps = {
 };
 
 const Signup = () => {
+    const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const memberId = localStorage.getItem('memberid');
     const {
         register,
         handleSubmit,
@@ -55,8 +59,14 @@ const Signup = () => {
             });
     };
     const navigate = useNavigate();
-
     const password = watch('Password', '');
+
+    useEffect(() => {
+        if (cookies.AuthorizationToken && memberId) {
+            navigate('/');
+        }
+    }, [cookies.AuthorizationToken, memberId, navigate]);
+
     return (
         <MotionBackground $image={BACK2} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <StyledRegisterForm onSubmit={handleSubmit(onSubmit)}>

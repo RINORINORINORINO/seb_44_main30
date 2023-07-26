@@ -7,6 +7,7 @@ import axios from 'axios';
 import BACK1 from '../../public/ob3.png';
 import BACK2 from '../../public/ob4.png';
 import RegisterForm from '../components/RegisterForm';
+import { useEffect } from 'react';
 interface FormInput {
     email: string;
     username: string;
@@ -14,12 +15,14 @@ interface FormInput {
 }
 
 const Login = () => {
-    const [,setCookie] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const [cookies,setCookie] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const memberId = localStorage.getItem('memberid');
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<FormInput>();
+    const navigate = useNavigate();
 
     const onSubmit = async (data: FormInput) => {
         const API_URL = import.meta.env.VITE_KEY;
@@ -46,7 +49,11 @@ const Login = () => {
         }
     };
 
-    const navigate = useNavigate();
+    useEffect(() => {
+        if (cookies.AuthorizationToken && memberId) {
+            navigate('/');
+        }
+    }, [cookies.AuthorizationToken, memberId, navigate]);
 
     return (
         <StyledCover initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
