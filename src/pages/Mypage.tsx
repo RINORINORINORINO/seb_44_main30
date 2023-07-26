@@ -27,7 +27,8 @@ interface member {
 const Mypage = () => {
     const [edit, setEdit] = useState(false);
     const [validation, setvalidation] = useState('');
-    const [upimage, setUpimage] = useState<File | null>(null);
+    const [upimage, setUpimage] = useState<string | null>(null);
+    const [uploadimage, setUploadImage] = useState<File | null>(null);
     const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
     const [deleteModal, setDeletModal] = useState(false);
     const authorizationToken = cookies.AuthorizationToken;
@@ -97,18 +98,27 @@ const Mypage = () => {
     const FileonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            setUpimage(file);
+            setUploadImage(file);
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                if (typeof reader.result === 'string') {
+                    setUpimage(reader.result);
+                } else {
+                    console.error('Failed to read the file as a data URL.');
+                }
+            };
         }
     };
 
     const Filesubmit = async () => {
-        if (!upimage) {
-            console.error('이미지 파일을 선택해주세요.');
+        if (!uploadimage) {
+            alert('이미지 파일을 선택해주세요.');
             return;
         }
 
         const formData = new FormData();
-        formData.append('multipartFile', upimage);
+        formData.append('multipartFile', uploadimage);
 
         try {
             const response = await axios.patch(`${API_URL}/members/image/${localStorage.memberid}`, formData, {
@@ -149,17 +159,20 @@ const Mypage = () => {
                             <Block width="500px" height="800px">
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                     <img
-                                        src={profileurl}
+                                        src={upimage ? upimage : profileurl}
                                         style={{ width: '100px', height: '100px', borderRadius: '50px' }}
                                     ></img>
 
-                                    <FileInputContainer>
-                                        <FileInputLabel htmlFor="file">프로필 이미지 선택</FileInputLabel>
-                                        <FileInput id="file" type="file" name="file" onChange={FileonChange} />
-                                    </FileInputContainer>
-                                    <StyledButton type="button" onClick={Filesubmit}>
-                                        프로필 이미지 수정
-                                    </StyledButton>
+                                    {upimage === null ? (
+                                        <FileInputContainer>
+                                            <FileInputLabel htmlFor="file">프로필 이미지 선택</FileInputLabel>
+                                            <FileInput id="file" type="file" name="file" onChange={FileonChange} />
+                                        </FileInputContainer>
+                                    ) : (
+                                        <StyledButton type="button" onClick={Filesubmit}>
+                                            프로필 이미지 저장
+                                        </StyledButton>
+                                    )}
 
                                     <Block width="290px" height="140px">
                                         <Infoexplain>
