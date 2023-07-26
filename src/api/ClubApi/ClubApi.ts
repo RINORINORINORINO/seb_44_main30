@@ -13,8 +13,3 @@ export async function getClubBoardDetail(boardClubId: number) {
     return response.data;
 }
 
-// export async function editClubStatus(clubId: number, data: any) {
-//     const API_URL = import.meta.env.VITE_KEY;
-//     const response = await axios.patch(`${API_URL}/clubs/${clubId}`, data);
-//     return response.data;
-// }

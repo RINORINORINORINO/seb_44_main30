@@ -22,6 +22,3 @@ export function useClubBoardDetail(boardClubId: number) {
     return useQuery(['clubDetailData', boardClubId], () => getClubBoardDetail(boardClubId));
 }
 
-// export function useEditClubStatus() {
-//     return useMutation(({ clubId, data }) => editClubStatus(clubId, data));
-// }
