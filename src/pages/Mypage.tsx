@@ -7,6 +7,7 @@ import { Loading } from '../components/Lodaing';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useCookies } from 'react-cookie';
 import DeleteModal from '../components/deleteModal';
+import ProfileModal from '../components/ProfileModal';
 
 interface member {
     memberId?: number;
@@ -27,8 +28,7 @@ interface member {
 const Mypage = () => {
     const [edit, setEdit] = useState(false);
     const [validation, setvalidation] = useState('');
-    const [upimage, setUpimage] = useState<string | null>(null);
-    const [uploadimage, setUploadImage] = useState<File | null>(null);
+    const [profile, setProfile] = useState(false);
     const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
     const [deleteModal, setDeletModal] = useState(false);
     const authorizationToken = cookies.AuthorizationToken;
@@ -95,47 +95,6 @@ const Mypage = () => {
             </>
         );
 
-    const FileonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setUploadImage(file);
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                if (typeof reader.result === 'string') {
-                    setUpimage(reader.result);
-                } else {
-                    console.error('Failed to read the file as a data URL.');
-                }
-            };
-        }
-    };
-
-    const Filesubmit = async () => {
-        if (!uploadimage) {
-            alert('이미지 파일을 선택해주세요.');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('multipartFile', uploadimage);
-
-        try {
-            const response = await axios.patch(`${API_URL}/members/image/${localStorage.memberid}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `${decodeURIComponent(authorizationToken)}`,
-                    Refresh: `${refreshToken}`,
-                    withCredentials: true,
-                },
-            });
-            console.log('수정됨', response.data);
-            location.reload();
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     const profileurl = `https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${data.profileImageUrl}`;
 
     return (
@@ -159,20 +118,18 @@ const Mypage = () => {
                             <Block width="500px" height="800px">
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                     <img
-                                        src={upimage ? upimage : profileurl}
+                                        src={profileurl}
                                         style={{ width: '100px', height: '100px', borderRadius: '50px' }}
                                     ></img>
+                                    <StyledButton
+                                        onClick={() => {
+                                            setProfile(!profile);
+                                        }}
+                                    >
+                                        이미지 수정하기
+                                    </StyledButton>
 
-                                    {upimage === null ? (
-                                        <FileInputContainer>
-                                            <FileInputLabel htmlFor="file">프로필 이미지 선택</FileInputLabel>
-                                            <FileInput id="file" type="file" name="file" onChange={FileonChange} />
-                                        </FileInputContainer>
-                                    ) : (
-                                        <StyledButton type="button" onClick={Filesubmit}>
-                                            프로필 이미지 저장
-                                        </StyledButton>
-                                    )}
+                                    {profile && <ProfileModal profileurl={profileurl} setProfile={setProfile} />}
 
                                     <Block width="290px" height="140px">
                                         <Infoexplain>
@@ -298,31 +255,6 @@ const Styledbutton = styled.button`
     background-color: #3884d5;
     color: white;
     cursor: pointer;
-`;
-
-const FileInputContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-`;
-
-const FileInput = styled.input`
-    display: none;
-`;
-
-const FileInputLabel = styled.label`
-    cursor: pointer;
-    padding: 10px 20px;
-    background-color: #f2f2f2;
-    border-radius: 5px;
-    font-weight: bold;
-    color: #333;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-        background-color: #ddd;
-    }
 `;
 
 const StyledButton = styled.button`
