@@ -60,7 +60,7 @@ const Footer = () => {
                 </div>
                 <div>
                     <div>ABOUT</div>
-                    <Info>사용설명서</Info>
+                    <StyledLink href="https://www.notion.so/codestates/7b6bf547e4504386abeeb0a29f2497d4" target="_blank" rel="noopener noreferrer">사용설명서</StyledLink>
                 </div>
                 <div>
                     <div>SUPPORT</div>
@@ -129,6 +129,9 @@ const StyledIntroduce = styled.div`
 const StyledLink = styled.a`
     color: white;
     text-decoration: none;
+    font-family: TTWanjudaedunsancheB;
+    font-size: 1.1rem;
+    margin-top: 60px;
 
     &:hover {
         color: #ccc;
