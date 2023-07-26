@@ -7,7 +7,7 @@ import ViewIcon from '../assets/View.svg';
 import { useClubBoardDetail } from '../api/ClubApi/ClubDataHooks.ts';
 import axios from 'axios';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation  } from '@tanstack/react-query';
 import { usePostHeader } from '../api/getHeader.ts';
 import ClubMapContainer from '../components/clubMap.tsx';
 import moment from 'moment';
@@ -105,6 +105,40 @@ const ClubDetail = () => {
         },
     );
 
+    let requestData;
+    if (clubDetail && clubDetail.data) {
+        requestData = {
+            "title": clubDetail.data.title,
+            "content": clubDetail.data.content,
+            "dueDate": clubDetail.data.dueDate,
+            "capacity": clubDetail.data.capacity,
+            "contact": clubDetail.data.contact,
+            "placeName": clubDetail.data.placeName,
+            "addressName": clubDetail.data.addressName,
+            "latitude": clubDetail.data.latitude,
+            "longitude": clubDetail.data.longitude,
+            "tags": clubDetail.data.tags,
+            "boardClubStatus": "BOARD_CLUB_COMPLETED"
+        }
+    }
+
+    const updateStatusMutation = useMutation(
+        () => axios.patch(`${import.meta.env.VITE_KEY}/clubs/${boardClubId}`, requestData, headers),
+        {
+            onSuccess: (data) => {
+                console.log(data)
+                window.location.reload()
+            },
+            onError: () => {
+                alert('마감 처리를 실패했습니다.');
+            },
+        }
+    );
+
+    const handleStatusChange = useCallback(() => {
+        updateStatusMutation.mutate();
+    }, [updateStatusMutation]);
+
     const handleDelete = useCallback(() => {
         if (window.confirm('게시글을 삭제하시겠습니까?')) {
             mutation.mutate(Number(boardClubId));
@@ -189,7 +223,7 @@ const ClubDetail = () => {
                             </div>
                             <div>
                                 {boardClubStatus === 'BOARD_CLUB_RECRUITING' ? (
-                                    <StyledStatusButton>모집 마감</StyledStatusButton>
+                                    <StyledStatusButton onClick={handleStatusChange}>모집 마감</StyledStatusButton>
                                 ) : (
                                     <span>모집 마감됨</span>
                                 )}
