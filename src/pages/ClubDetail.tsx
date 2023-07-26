@@ -7,7 +7,7 @@ import ViewIcon from '../assets/View.svg';
 import { useClubBoardDetail } from '../api/ClubApi/ClubDataHooks.ts';
 import axios from 'axios';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
-import { useMutation, useQueryClient  } from '@tanstack/react-query';
+import { useMutation  } from '@tanstack/react-query';
 import { usePostHeader } from '../api/getHeader.ts';
 import ClubMapContainer from '../components/clubMap.tsx';
 import moment from 'moment';
@@ -27,7 +27,6 @@ const ClubDetail = () => {
     const numberBoardClubId = boardClubId ? Number(boardClubId) : 0;
     const { data: clubDetail } = useClubBoardDetail(numberBoardClubId);
     const [stateLikeCount, setStateLikeCount] = useState(0);
-    const queryClient = useQueryClient();
 
     let //
         boardClubStatus,
@@ -129,7 +128,6 @@ const ClubDetail = () => {
             onSuccess: (data) => {
                 console.log(data)
                 window.location.reload()
-                queryClient.refetchQueries(['clubDetailData', boardClubId]);
             },
             onError: () => {
                 alert('마감 처리를 실패했습니다.');
