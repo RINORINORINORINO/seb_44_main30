@@ -241,9 +241,9 @@ const ClubCreate = () => {
                                         const contactRoute = getValues('contactRoute');
                                         let pattern: RegExp;
                                         if (contactRoute === '오픈채팅') {
-                                            pattern = /^https:\/\/open\.kakao\.com\/o\/\S*$/;
+                                            pattern = /^https:\/\/docs\.google\.com\/forms\/d\/[A-Za-z0-9]+\/viewform$/;
                                         } else if (contactRoute === '구글 폼') {
-                                            pattern = /^https:\/\/docs\.google\.com\/forms\/\S*$/;
+                                            pattern = /^https:\/\/docs\.google\.com\/forms\/d\/e\/\\S*$/;
                                         }
                                         return pattern?.test(value) || '유효하지 않은 URL입니다!';
                                     },
