@@ -30,9 +30,9 @@ const Community = () => {
     const navigate = useNavigate();
     const scrollPosition = useSelector((state: RootState) => state.scroll);
     const dispatch = useDispatch();
-
+    const keywordParam = keyword === 'null' ? null : keyword;
     const totalPageNum = totalPageArr[totalPageArr.length - 1] || 1;
-
+    
     function useQueryParam() {
         //console.log(useLocation().search);
         return new URLSearchParams(useLocation().search);
@@ -49,10 +49,10 @@ const Community = () => {
         error: errorData,
         data: allCommunityData,
     } = useQuery(
-        ['community', page],
+        ['community', page, keywordParam],
         () => {
             console.log(`${page}페이지의 데이터를 가져옵니다.`);
-            return getTotalCommunityPost(page, size);
+            return getTotalCommunityPost(page, size, keywordParam);
         },
         {
             staleTime: 10000, // 10초
